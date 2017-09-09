@@ -28,7 +28,7 @@ public class Axioms {
     }
 
     private boolean check(Expression expression, Expression axiom) {
-        if (axiom instanceof Variable) {
+        if (axiom.getClassName() == ClassName.VARIABLE) {
             if (substitution.containsKey(((Variable) axiom).getName())) {
                 return substitution.get(((Variable) axiom).getName()).equals(expression);
             }
@@ -37,23 +37,20 @@ public class Axioms {
         }
         if (!expression.getClass().equals(axiom.getClass()))
             return false;
-        if (expression instanceof Conjunction) {
-            return check(((Conjunction) expression).getLeft(), ((Conjunction) axiom).getLeft())
-                    && check(((Conjunction) expression).getRight(), ((Conjunction) axiom).getRight());
-        }
-        else if (expression instanceof Disjunction) {
-            return check(((Disjunction) expression).getLeft(), ((Disjunction) axiom).getLeft())
-                    && check(((Disjunction) expression).getRight(), ((Disjunction) axiom).getRight());
-        }
-        else if (expression instanceof Implication) {
-            return check(((Implication) expression).getLeft(), ((Implication) axiom).getLeft())
-                    && check(((Implication) expression).getRight(), ((Implication) axiom).getRight());
-        }
-        else if (expression instanceof Negation) {
-            return check(((Negation) expression).getNegated(), ((Negation) axiom).getNegated());
-        }
-        else if (expression instanceof Variable) {
-            return true;
+        switch (expression.getClassName()) {
+            case CONJUNCTION:
+                return check(((Conjunction) expression).getLeft(), ((Conjunction) axiom).getLeft())
+                        && check(((Conjunction) expression).getRight(), ((Conjunction) axiom).getRight());
+            case DISJUNCTION:
+                return check(((Disjunction) expression).getLeft(), ((Disjunction) axiom).getLeft())
+                        && check(((Disjunction) expression).getRight(), ((Disjunction) axiom).getRight());
+            case IMPLICATION:
+                return check(((Implication) expression).getLeft(), ((Implication) axiom).getLeft())
+                        && check(((Implication) expression).getRight(), ((Implication) axiom).getRight());
+            case NEGATION:
+                return check(((Negation) expression).getNegated(), ((Negation) axiom).getNegated());
+            case VARIABLE:
+                return true;
         }
 
         throw new RuntimeException("Something went wrong: expression class " + expression.getClass() +

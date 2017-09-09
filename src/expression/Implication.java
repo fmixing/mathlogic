@@ -2,7 +2,7 @@ package expression;
 
 import java.util.Objects;
 
-public class Implication extends Expression {
+public class Implication implements Expression {
 
     private Expression left; //Disjunction
     private Expression right; //Expression
@@ -37,5 +37,10 @@ public class Implication extends Expression {
     @Override
     public String toString() {
         return "(" + left.toString() + "->" + right.toString() + ")";
+    }
+
+    @Override
+    public ClassName getClassName() {
+        return ClassName.IMPLICATION;
     }
 }

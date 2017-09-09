@@ -2,7 +2,7 @@ package expression;
 
 import java.util.Objects;
 
-public class Negation extends Expression{
+public class Negation implements Expression{
 
     private Expression negated;
 
@@ -25,6 +25,11 @@ public class Negation extends Expression{
     @Override
     public int hashCode() {
         return Objects.hash(negated);
+    }
+
+    @Override
+    public ClassName getClassName() {
+        return ClassName.NEGATION;
     }
 
     @Override

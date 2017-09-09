@@ -2,7 +2,7 @@ package expression;
 
 import java.util.Objects;
 
-public class Conjunction extends Expression {
+public class Conjunction implements Expression {
 
     private Expression left; //Conjunction
     private Expression right; //Negation
@@ -18,6 +18,11 @@ public class Conjunction extends Expression {
 
     public Expression getRight() {
         return right;
+    }
+
+    @Override
+    public ClassName getClassName() {
+        return ClassName.CONJUNCTION;
     }
 
     @Override

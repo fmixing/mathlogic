@@ -1,7 +1,7 @@
 package expression;
 
-public class Expression {
+public interface Expression {
 
-
+    ClassName getClassName();
 
 }
