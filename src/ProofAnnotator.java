@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ProofAnnotator {
 
@@ -29,7 +28,6 @@ public class ProofAnnotator {
     List<Expression> implications;
 
     private String firstLine;
-
 
     public ProofAnnotator(String inPath, String outPath) {
 
@@ -65,16 +63,13 @@ public class ProofAnnotator {
                         assumptions.add(parse(assumption));
                     }
                     alphaStatement = parse(statement.split("\\|-")[1]);
-                }
-                else {
+                } else {
                     proof.add(parse(statement));
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        implications = proof.stream().filter(v -> v instanceof Implication).collect(Collectors.toList());
-
     }
 
     private Expression parse(String statement) {
@@ -86,21 +81,26 @@ public class ProofAnnotator {
     }
 
 
+    //TODO
     public void annotate() {
         try (PrintWriter out = new PrintWriter(new File(outPath))) {
-            out.print(firstLine);
-            proof.forEach(expression -> {
+            if (firstLine != null)
+                System.out.print(firstLine);
+
+            outer:
+            for (int currExpr = 0; currExpr < proof.size(); currExpr++) {
+                Expression expression = proof.get(currExpr);
 
                 StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append("(").append(proof.indexOf(expression) + 1).append(")")
-                .append(" ").append(expression).append(" (");
+                stringBuilder.append("(").append(currExpr + 1).append(")")
+                        .append(" ").append(expression).append(" (");
 
                 int isAxiom = axioms.isAxiom(expression);
 
                 if (isAxiom > 0) {
                     stringBuilder.append("Сх. акс. ").append(isAxiom).append(")").append("\n");
                     out.print(stringBuilder.toString());
-                    return;
+                    continue;
                 }
 
                 Optional<Expression> isAssumption = assumptions.stream().filter(expression::equals).findAny();
@@ -108,22 +108,26 @@ public class ProofAnnotator {
                 if (isAssumption.isPresent()) {
                     stringBuilder.append("Предп. ").append(assumptions.indexOf(isAssumption.get()) + 1).append(")").append("\n");
                     out.print(stringBuilder.toString());
-                    return;
+                    continue;
                 }
 
-                Optional<Expression> isMP = implications.stream().
-                        filter(v -> proof.contains(((Implication) v).getLeft()) && ((Implication) v).getRight().equals(expression)).findAny();
+                for (int i = currExpr; i >= 0; i--) {
+                    if (proof.get(i) instanceof Implication
+                            && ((Implication) proof.get(i)).getRight().equals(expression)) {
+                        int implLeft = proof.indexOf(((Implication) proof.get(i)).getLeft());
+                        if (implLeft > -1 && implLeft < currExpr) {
+                            stringBuilder.append("M.P. ").append(i + 1).append(", ").
+                                    append(implLeft + 1).append(")").append("\n");
+                            out.print(stringBuilder.toString());
+                            continue outer;
+                        }
 
-                if (isMP.isPresent()) {
-                    stringBuilder.append("M.P. ").append(proof.indexOf(isMP.get()) + 1).append(", ").
-                            append(proof.indexOf(((Implication) isMP.get()).getLeft()) + 1).append(")").append("\n");
-                    out.print(stringBuilder.toString());
-                    return;
+                    }
                 }
 
                 stringBuilder.append("Не доказано").append(")").append("\n");
                 out.print(stringBuilder.toString());
-            });
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
