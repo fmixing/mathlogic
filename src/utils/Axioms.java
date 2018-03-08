@@ -9,22 +9,23 @@ import java.util.Optional;
 
 public class Axioms {
 
+    public final static String axiomsPath = "src/axioms";
+
     private List<Expression> axioms;
 
-    private Map<String, Expression> substitution;
+    private Map<String, Expression> substitution = new HashMap<>();
 
     public Axioms(List<Expression> axioms) {
         this.axioms = axioms;
-        substitution = new HashMap<>();
     }
 
-    public int isAxiom(Expression expression) {
-        Optional<Expression> first = axioms.stream().filter(v ->  {
+    int isAxiom(Expression expression) {
+        Optional<Expression> first = axioms.stream().filter(v -> {
             substitution.clear();
-            return this.check(expression, v);
+            return check(expression, v);
         }).findFirst();
 
-        return first.map(expression1 -> axioms.indexOf(expression1) + 1).orElse(-1);
+        return first.map(expr -> axioms.indexOf(expr) + 1).orElse(-1);
     }
 
     private boolean check(Expression expression, Expression axiom) {

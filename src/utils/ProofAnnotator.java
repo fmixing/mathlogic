@@ -7,17 +7,22 @@ import expression.Implication;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.List;
 
-public class ProofAnnotator extends Proof {
+public class ProofAnnotator {
 
-    public ProofAnnotator(String inPath, String outPath) {
-        super(inPath, outPath);
+    private Axioms axioms;
+
+    public ProofAnnotator(Axioms axioms) {
+
+        this.axioms = axioms;
     }
 
-    public void annotate() {
+    public void annotate(Proof proofToAnnotate, String outPath) {
         try (PrintWriter out = new PrintWriter(new File(outPath))) {
-            if (firstLine != null)
-                out.println(firstLine);
+            List<Expression> proof = proofToAnnotate.getProof();
+            if (proofToAnnotate.getFirstLine() != null)
+                out.println(proofToAnnotate.getFirstLine());
 
             outer:
             for (int currExpr = 0; currExpr < proof.size(); currExpr++) {
@@ -35,9 +40,9 @@ public class ProofAnnotator extends Proof {
                     continue;
                 }
 
-                int isAssumption = assumptions.indexOf(expression);
+                int isAssumption = proofToAnnotate.getAssumptions().indexOf(expression);
 
-                if (isAssumption > 0) {
+                if (isAssumption >= 0) {
                     stringBuilder.append("Предп. ").append(isAssumption + 1).append(")").append("\n");
                     out.print(stringBuilder.toString());
                     continue;
@@ -59,10 +64,10 @@ public class ProofAnnotator extends Proof {
 
                 stringBuilder.append("Не доказано").append(")").append("\n");
                 out.print(stringBuilder.toString());
+                break;
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
-
 }

@@ -4,81 +4,86 @@ import expression.ClassName;
 import expression.Expression;
 import expression.Implication;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class ProofDeductor extends Proof {
+public class ProofDeductor {
 
+    private Axioms axioms;
+    private Map<String, Proof> deductionProofs;
 
-    public ProofDeductor(String inPath, String outPath) {
-
-        super(inPath, outPath);
+    public ProofDeductor(Axioms axioms, Map<String, Proof> deductionProofs) {
+        this.axioms = axioms;
+        this.deductionProofs = deductionProofs;
     }
 
+    public List<Expression> deduct(Proof proofToDeduct) {
+        List<Expression> ans = new ArrayList<>();
 
-    public void deduct() {
-        try (PrintWriter out = new PrintWriter(new File(outPath))) {
+        List<Expression> proof = proofToDeduct.getProof();
 
-            if (firstLine != null)
-                out.println(firstLine);
+        outer:
+        for (int currExpr = 0; currExpr < proof.size(); currExpr++) {
+            Expression expression = proof.get(currExpr);
 
-            outer:
-            for (int currExpr = 0; currExpr < proof.size(); currExpr++) {
-                Expression expression = proof.get(currExpr);
+            int isAxiom = axioms.isAxiom(expression);
+            int isAssumption = proofToDeduct.getAssumptions().indexOf(expression);
 
-                int isAxiom = axioms.isAxiom(expression);
-                int isAssumption = assumptions.indexOf(expression);
+            if (expression.equals(proofToDeduct.getAlphaStatement())) {
+                alphaParser(proofToDeduct.getAlphaStatement(), ans);
+                continue;
+            }
 
-                if (isAxiom > 0 || isAssumption > 0) {
-                    AxOrAssumParser(out, expression);
-                    continue;
-                }
+            if (isAxiom > 0 || isAssumption >= 0) {
+                AxOrAssumParser(expression, proofToDeduct.getAlphaStatement(), ans);
+                continue;
+            }
 
-                if (expression.equals(alphaStatement)) {
-                    alphaParser(out, alphaStatement);
-                    continue;
-                }
+            for (int i = currExpr; i >= 0; i--) {
+                if (proof.get(i).getClassName() == ClassName.IMPLICATION
+                        && ((Implication) proof.get(i)).getRight().equals(expression)) {
 
-                for (int i = currExpr; i >= 0; i--) {
-                    if (proof.get(i).getClassName() == ClassName.IMPLICATION
-                            && ((Implication) proof.get(i)).getRight().equals(expression)) {
-                        int implLeft = proof.indexOf(((Implication) proof.get(i)).getLeft());
-                        if (implLeft > -1 && implLeft < currExpr) {
-                            MPParser(out, expression, ((Implication) proof.get(i)).getLeft());
-                            continue outer;
-                        }
-
+                    int implLeft = proof.indexOf(((Implication) proof.get(i)).getLeft());
+                    if (implLeft > -1 && implLeft < currExpr) {
+                        MPParser(expression, ((Implication) proof.get(i)).getLeft(),
+                                proofToDeduct.getAlphaStatement(), ans);
+                        continue outer;
                     }
                 }
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+        return ans;
     }
 
-    private void AxOrAssumParser(PrintWriter out, Expression expression) {
-        out.println(expression);
-        out.println(new Implication(expression, new Implication(alphaStatement, expression)));
-        out.println(new Implication(alphaStatement, expression));
+    private void AxOrAssumParser(Expression expression, Expression alphaStatement, List<Expression> ans) {
+        ans.addAll(Arrays.asList(expression,
+                new Implication(expression, new Implication(alphaStatement, expression)),
+                new Implication(alphaStatement, expression)));
     }
 
-    private void alphaParser(PrintWriter out, Expression expression) {
-        String outLines = ("(a)->((a)->(a))\n" +
-                "((a)->((a)->(a)))->((a)->(((a)->(a))->(a)))->((a)->(a))\n" +
-                "((a)->(((a)->(a))->(a)))->((a)->(a))\n" +
-                "((a)->(((a)->(a))->(a)))\n" +
-                "(a)->(a)").replace("a", expression.toString());
-        out.println(outLines);
+    /**
+     * Доказательство, что |- a -> a
+     */
+    private void alphaParser(Expression alpha, List<Expression> ans) {
+        Map<String, Expression> substitution = new HashMap<>();
+        substitution.put("a", alpha);
+
+        ans.addAll(deductionProofs.get("alpha").getProof().stream()
+                .map(expr -> NameChanger.changeNames(expr, substitution))
+                .collect(Collectors.toList()));
     }
 
-    private void MPParser(PrintWriter out, Expression expression, Expression mpExpression) {
-        String outLines = ("((a)->(b1))->(((a)->((b1)->(b2)))->((a)->(b2)))\n" +
-                "(((a)->((b1)->(b2)))->((a)->(b2)))\n" +
-                "(a)->(b2)").replace("a", alphaStatement.toString()).
-                replace("b1", mpExpression.toString()).
-                replace("b2", expression.toString());
-        out.println(outLines);
+    /**
+     * Доказательство по MP (когда текущее высказывание выводится из двух предыдущих по MP)
+     */
+    private void MPParser(Expression expression, Expression mpExpression, Expression alphaStatement, List<Expression> ans) {
+        Map<String, Expression> substitution = new HashMap<>();
+        substitution.put("a", alphaStatement);
+        substitution.put("b1", mpExpression);
+        substitution.put("b2", expression);
+
+        ans.addAll(deductionProofs.get("mp").getProof().stream()
+                .map(expr -> NameChanger.changeNames(expr, substitution))
+                .collect(Collectors.toList()));
     }
 }

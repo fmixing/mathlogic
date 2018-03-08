@@ -1,81 +1,62 @@
 package utils;
 
-import HW1.FirstTaskLexer;
-import HW1.FirstTaskParser;
 import expression.Expression;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.TokenStream;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Proof {
 
-    private static String axiomsPath = "src/axioms";
+    private List<Expression> assumptions = new ArrayList<>();
 
-    protected List<Expression> axiomsList;
-    protected List<Expression> assumptions;
-    protected List<Expression> proof;
+    private List<Expression> proof = new ArrayList<>();
 
-    protected Expression alphaStatement;
-    protected String outPath;
+    private Expression alphaStatement;
 
-    protected Axioms axioms;
+    private String firstLine;
 
-    protected String firstLine;
+    public Proof() {}
 
-    public Proof(String inPath, String outPath) {
-
-        this.outPath = outPath;
-
-        try (Scanner in = new Scanner(new File(axiomsPath))) {
-            axiomsList = new ArrayList<>();
-            ANTLRInputStream is;
-            while (in.hasNext()) {
-                String statement = in.next();
-                is = new ANTLRInputStream(statement);
-                FirstTaskLexer lexer = new FirstTaskLexer(is);
-                TokenStream ts = new CommonTokenStream(lexer);
-                FirstTaskParser parser = new FirstTaskParser(ts);
-                axiomsList.add(parser.expression().expr);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        axioms = new Axioms(axiomsList);
-
-        try (Scanner in = new Scanner(new File(inPath))) {
-            assumptions = new ArrayList<>();
-            proof = new ArrayList<>();
-            while (in.hasNext()) {
-                String statement = in.next();
-
-                if (statement.contains("|-")) {
-                    firstLine = statement;
-                    String[] split = statement.split("\\|-")[0].split(",");
-                    for (String assumption : split) {
-                        assumptions.add(parse(assumption));
-                    }
-                    alphaStatement = assumptions.get(assumptions.size() - 1);
-                } else {
-                    proof.add(parse(statement));
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public Proof(List<Expression> proof) {
+        this.proof = proof;
     }
 
-    private Expression parse(String statement) {
-        ANTLRInputStream is = new ANTLRInputStream(statement);
-        FirstTaskLexer lexer = new FirstTaskLexer(is);
-        TokenStream ts = new CommonTokenStream(lexer);
-        FirstTaskParser parser = new FirstTaskParser(ts);
-        return parser.expression().expr;
+    List<Expression> getProofWithSubstitution(Map<String, Expression> substitutionMap) {
+        return proof.stream().map(expr -> NameChanger.changeNames(expr, substitutionMap))
+                .collect(Collectors.toList());
+    }
+
+    List<Expression> getAssumptions() {
+        return assumptions;
+    }
+
+    List<Expression> getProof() {
+        return proof;
+    }
+
+    Expression getAlphaStatement() {
+        return alphaStatement;
+    }
+
+    public String getFirstLine() {
+        return firstLine;
+    }
+
+    void setAssumptions(List<Expression> assumptions) {
+        this.assumptions = assumptions;
+    }
+
+    public void setProof(List<Expression> proof) {
+        this.proof = proof;
+    }
+
+    void setAlphaStatement(Expression alphaStatement) {
+        this.alphaStatement = alphaStatement;
+    }
+
+    void setFirstLine(String firstLine) {
+        this.firstLine = firstLine;
     }
 }

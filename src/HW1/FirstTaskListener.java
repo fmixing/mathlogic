@@ -1,4 +1,4 @@
-// Generated from FirstTask.g4 by ANTLR 4.5.3
+// Generated from src/HW1/FirstTask.g4 by ANTLR 4.5.3
 
 package HW1;
 import expression.*;

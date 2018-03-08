@@ -1,4 +1,4 @@
-// Generated from FirstTask.g4 by ANTLR 4.5.3
+// Generated from src/HW1/FirstTask.g4 by ANTLR 4.5.3
 
 package HW1;
 import expression.*;
@@ -107,11 +107,6 @@ public class FirstTaskParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FirstTaskListener ) ((FirstTaskListener)listener).exitExpression(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FirstTaskVisitor ) return ((FirstTaskVisitor<? extends T>)visitor).visitExpression(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -177,11 +172,6 @@ public class FirstTaskParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FirstTaskListener ) ((FirstTaskListener)listener).exitDisjunction(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FirstTaskVisitor ) return ((FirstTaskVisitor<? extends T>)visitor).visitDisjunction(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -269,11 +259,6 @@ public class FirstTaskParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FirstTaskListener ) ((FirstTaskListener)listener).exitConjunction(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FirstTaskVisitor ) return ((FirstTaskVisitor<? extends T>)visitor).visitConjunction(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -367,11 +352,6 @@ public class FirstTaskParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FirstTaskListener ) ((FirstTaskListener)listener).exitNegation(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FirstTaskVisitor ) return ((FirstTaskVisitor<? extends T>)visitor).visitNegation(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final NegationContext negation() throws RecognitionException {
@@ -440,11 +420,6 @@ public class FirstTaskParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof FirstTaskListener ) ((FirstTaskListener)listener).exitVariable(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof FirstTaskVisitor ) return ((FirstTaskVisitor<? extends T>)visitor).visitVariable(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 

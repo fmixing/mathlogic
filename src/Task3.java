@@ -1,8 +1,5 @@
 import expression.Expression;
-import utils.Axioms;
-import utils.ExpressionsParser;
-import utils.Proof;
-import utils.ProofDeductor;
+import utils.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,21 +13,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class Task2 {
+public class Task3 {
+
+    private final static String lemmaProofs = "src/task3Proofs";
 
     private static final String deductiontheoremproofs = "src/deductiontheoremproofs";
 
-    /**
-     * @param args first arg should contain the input path, second arg should contain the path to output file
-     */
     public static void main(String[] args) {
         if (args.length != 2 || args[0] == null || args[1] == null)
-            throw new IllegalArgumentException("Wrong args: first arg should contain the input path, second arg should contain the path to output file");
+            throw new IllegalArgumentException("Wrong args: first arg should contain the input path, " +
+                    "second arg should contain the path to output file");
+
+        Map<String, Proof> lemmas = new HashMap<>();
+
         List<Expression> axiomExpressions = ExpressionsParser.parse(Axioms.axiomsPath);
 
         Axioms axioms = new Axioms(axiomExpressions);
 
-        Proof proof = ExpressionsParser.parseProof(args[0]);
+        try (Stream<Path> paths = Files.walk(Paths.get(lemmaProofs))) {
+            paths.filter(Files::isRegularFile).forEach(path -> {
+                Proof proof = ExpressionsParser.parseProof(path.toString());
+
+                String fileName = path.getFileName().toString();
+
+                lemmas.put(fileName, proof);
+            });
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Map<String, Proof> deductionProofs = new HashMap<>();
 
@@ -47,18 +58,24 @@ public class Task2 {
             throw new RuntimeException(e);
         }
 
-        ProofDeductor proofDeductor = new ProofDeductor(axioms, deductionProofs);
+        List<Expression> parse = ExpressionsParser.parse(args[0]);
+        assert parse.size() == 1;
 
-        List<Expression> deduct = proofDeductor.deduct(proof);
+        Prover prover = new Prover(lemmas, axioms, deductionProofs);
+
+        List<Expression> prove = prover.prove(parse.get(0));
 
         try (PrintWriter out = new PrintWriter(new File(args[1]))) {
-            if (proof.getFirstLine() != null) {
-                out.println(proof.getFirstLine());
-            }
-            deduct.forEach(out::println);
+            ProofAnnotator proofAnnotator = new ProofAnnotator(axioms);
+            Proof proof = new Proof();
+            proof.setProof(prove);
+            proofAnnotator.annotate(proof, "test/HW3/annotate");
+
+            prove.forEach(out::println);
         }
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 }
+
