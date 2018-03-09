@@ -15,6 +15,11 @@ public class Variable implements Expression {
         return ClassName.VARIABLE;
     }
 
+    @Override
+    public String toTree() {
+        return name;
+    }
+
     public String getName() {
         return name;
     }

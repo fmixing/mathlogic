@@ -33,6 +33,11 @@ public class Negation implements Expression{
     }
 
     @Override
+    public String toTree() {
+        return "(!," + negated.toTree() + ")";
+    }
+
+    @Override
     public String toString() {
         return "!" + negated.toString();
     }

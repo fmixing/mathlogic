@@ -26,6 +26,11 @@ public class Conjunction implements Expression {
     }
 
     @Override
+    public String toTree() {
+        return "(&," + left.toTree() + "," + right.toTree() + ")";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

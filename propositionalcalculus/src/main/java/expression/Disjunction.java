@@ -43,4 +43,9 @@ public class Disjunction implements Expression {
     public ClassName getClassName() {
         return ClassName.DISJUNCTION;
     }
+
+    @Override
+    public String toTree() {
+        return "(|," + left.toTree() + "," + right.toTree() + ")";
+    }
 }

@@ -43,4 +43,9 @@ public class Implication implements Expression {
     public ClassName getClassName() {
         return ClassName.IMPLICATION;
     }
+
+    @Override
+    public String toTree() {
+        return "(->," + left.toTree() + "," + right.toTree() + ")";
+    }
 }
