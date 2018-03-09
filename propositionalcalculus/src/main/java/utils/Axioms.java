@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class Axioms {
 
-    public final static String axiomsPath = "src/axioms";
+    public final static String axiomsPath = "propositionalcalculus/src/main/java/axioms";
 
     private List<Expression> axioms;
 

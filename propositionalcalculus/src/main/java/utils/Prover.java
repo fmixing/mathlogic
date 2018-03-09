@@ -9,7 +9,7 @@ import static expression.ClassName.*;
 
 public class Prover {
 
-    public Map<String, Integer> namesToIndex = new HashMap<>();
+    private Map<String, Integer> namesToIndex = new HashMap<>();
 
     private List<String> names = new ArrayList<>();
 
@@ -128,7 +128,7 @@ public class Prover {
         return assumptions;
     }
 
-    public List<Expression> proveInternal(BitSet bitSet, Expression expressionToProve) {
+    private List<Expression> proveInternal(BitSet bitSet, Expression expressionToProve) {
         // Проверка высказывания на общезначность
         if (!evaluate(bitSet, expressionToProve)) {
             return Collections.emptyList();

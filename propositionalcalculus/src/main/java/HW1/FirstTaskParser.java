@@ -25,7 +25,7 @@ public class FirstTaskParser extends Parser {
 		RULE_expression = 0, RULE_disjunction = 1, RULE_conjunction = 2, RULE_negation = 3, 
 		RULE_variable = 4;
 	public static final String[] ruleNames = {
-		"expression", "disjunction", "conjunction", "negation", "variable"
+            "src/main/java/expression", "disjunction", "conjunction", "negation", "variable"
 	};
 
 	private static final String[] _LITERAL_NAMES = {

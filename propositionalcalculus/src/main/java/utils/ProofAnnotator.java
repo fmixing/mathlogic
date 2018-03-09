@@ -58,7 +58,6 @@ public class ProofAnnotator {
                             out.print(stringBuilder.toString());
                             continue outer;
                         }
-
                     }
                 }
 

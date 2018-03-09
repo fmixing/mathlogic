@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 
 public class Task3 {
 
-    private final static String lemmaProofs = "src/task3Proofs";
+    private final static String lemmaProofs = "propositionalcalculus/src/main/java/task3Proofs";
 
-    private static final String deductiontheoremproofs = "src/deductiontheoremproofs";
+    private static final String deductiontheoremproofs = "propositionalcalculus/src/main/java/deductiontheoremproofs";
 
     public static void main(String[] args) {
         if (args.length != 2 || args[0] == null || args[1] == null)
@@ -69,7 +69,7 @@ public class Task3 {
             ProofAnnotator proofAnnotator = new ProofAnnotator(axioms);
             Proof proof = new Proof();
             proof.setProof(prove);
-            proofAnnotator.annotate(proof, "test/HW3/annotate");
+            proofAnnotator.annotate(proof, "propositionalcalculus/src/test/java/HW3/annotate.out");
 
             prove.forEach(out::println);
         }

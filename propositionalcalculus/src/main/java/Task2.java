@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 
 public class Task2 {
 
-    private static final String deductiontheoremproofs = "src/deductiontheoremproofs";
+    private static final String deductiontheoremproofs = "propositionalcalculus/src/main/java/deductiontheoremproofs";
 
     /**
      * @param args first arg should contain the input path, second arg should contain the path to output file
