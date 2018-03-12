@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 public class Task2 {
@@ -53,8 +54,14 @@ public class Task2 {
 
         try (PrintWriter out = new PrintWriter(new File(args[1]))) {
             if (proof.getFirstLine() != null) {
-                out.println(proof.getFirstLine());
+                String newHeader = "|-" + (proof.getAlphaStatement() == null
+                        ? proof.getBetaStatement()
+                        : proof.getAlphaStatement() + "->" + proof.getBetaStatement());
+                StringJoiner sj = new StringJoiner(",", "", newHeader);
+                proof.getAssumptions().forEach(assumption -> sj.add(assumption.toString()));
+                out.println(sj.toString());
             }
+
             deduct.forEach(out::println);
         }
         catch (FileNotFoundException e) {

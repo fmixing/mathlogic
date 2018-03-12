@@ -1,10 +1,13 @@
 package expression;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
-public class Conjunction implements Expression {
+public class Conjunction implements BinOp {
 
     private Expression left; //Conjunction
+
     private Expression right; //Negation
 
     public Conjunction(Expression left, Expression right) {
@@ -12,10 +15,12 @@ public class Conjunction implements Expression {
         this.right = right;
     }
 
+    @Override
     public Expression getLeft() {
         return left;
     }
 
+    @Override
     public Expression getRight() {
         return right;
     }
@@ -23,6 +28,16 @@ public class Conjunction implements Expression {
     @Override
     public ClassName getClassName() {
         return ClassName.CONJUNCTION;
+    }
+
+    @Override
+    public OperationType getType() {
+        return OperationType.LOGIC;
+    }
+
+    @Override
+    public Expression cloneSubstitute(Map<String, String> changeNames) {
+        return new Conjunction(left.cloneSubstitute(changeNames), right.cloneSubstitute(changeNames));
     }
 
     @Override

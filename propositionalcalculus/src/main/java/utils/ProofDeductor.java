@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class ProofDeductor {
 
     private Axioms axioms;
+
     private Map<String, Proof> deductionProofs;
 
     public ProofDeductor(Axioms axioms, Map<String, Proof> deductionProofs) {

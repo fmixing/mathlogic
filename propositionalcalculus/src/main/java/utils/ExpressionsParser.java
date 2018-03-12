@@ -26,7 +26,8 @@ public class ExpressionsParser {
                 if (!assumptions.isEmpty()) {
                     proof.setFirstLine(statement);
                     proof.setAssumptions(assumptions);
-                    proof.setAlphaStatement(assumptions.get(assumptions.size() - 1));
+                    proof.setAlphaStatement(assumptions.remove(assumptions.size() - 1));
+                    proof.setBetaStatement(getBetaStatement(statement));
                 }
 
                 proof.setProof(readFile(inPath));
@@ -66,6 +67,14 @@ public class ExpressionsParser {
 
         return Arrays.stream(statement.split("\\|-")[0].split(","))
                 .map(ExpressionsParser::parseInternal).collect(Collectors.toList());
+    }
+
+    private static Expression getBetaStatement(String statement) {
+        String beta = statement.split("\\|-")[1];
+        if (beta == null || beta.isEmpty()) {
+            throw new RuntimeException("Header should contain expression to prove");
+        }
+        return parseInternal(beta);
     }
 
     private static Expression parseInternal(String statement) {

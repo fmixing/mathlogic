@@ -15,6 +15,8 @@ public class Proof {
 
     private Expression alphaStatement;
 
+    private Expression betaStatement;
+
     private String firstLine;
 
     public Proof() {}
@@ -28,7 +30,7 @@ public class Proof {
                 .collect(Collectors.toList());
     }
 
-    List<Expression> getAssumptions() {
+    public List<Expression> getAssumptions() {
         return assumptions;
     }
 
@@ -36,7 +38,7 @@ public class Proof {
         return proof;
     }
 
-    Expression getAlphaStatement() {
+    public Expression getAlphaStatement() {
         return alphaStatement;
     }
 
@@ -44,7 +46,7 @@ public class Proof {
         return firstLine;
     }
 
-    void setAssumptions(List<Expression> assumptions) {
+    public void setAssumptions(List<Expression> assumptions) {
         this.assumptions = assumptions;
     }
 
@@ -52,11 +54,19 @@ public class Proof {
         this.proof = proof;
     }
 
-    void setAlphaStatement(Expression alphaStatement) {
+    public void setAlphaStatement(Expression alphaStatement) {
         this.alphaStatement = alphaStatement;
     }
 
-    void setFirstLine(String firstLine) {
+    public void setFirstLine(String firstLine) {
         this.firstLine = firstLine;
+    }
+
+    public Expression getBetaStatement() {
+        return betaStatement;
+    }
+
+    public void setBetaStatement(Expression betaStatement) {
+        this.betaStatement = betaStatement;
     }
 }

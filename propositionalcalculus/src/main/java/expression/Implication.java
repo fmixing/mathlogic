@@ -1,8 +1,9 @@
 package expression;
 
+import java.util.Map;
 import java.util.Objects;
 
-public class Implication implements Expression {
+public class Implication implements BinOp {
 
     private Expression left; //Disjunction
     private Expression right; //Expression
@@ -12,10 +13,12 @@ public class Implication implements Expression {
         this.right = right;
     }
 
+    @Override
     public Expression getLeft() {
         return left;
     }
 
+    @Override
     public Expression getRight() {
         return right;
     }
@@ -42,5 +45,15 @@ public class Implication implements Expression {
     @Override
     public ClassName getClassName() {
         return ClassName.IMPLICATION;
+    }
+
+    @Override
+    public OperationType getType() {
+        return OperationType.LOGIC;
+    }
+
+    @Override
+    public Expression cloneSubstitute(Map<String, String> changeNames) {
+        return new Implication(left.cloneSubstitute(changeNames), right.cloneSubstitute(changeNames));
     }
 }

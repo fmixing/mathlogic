@@ -1,8 +1,10 @@
 package expression;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
-public class Negation implements Expression{
+public class Negation implements UnOp {
 
     private Expression negated;
 
@@ -10,7 +12,8 @@ public class Negation implements Expression{
         this.negated = negated;
     }
 
-    public Expression getNegated() {
+    @Override
+    public Expression getExpression() {
         return negated;
     }
 
@@ -33,7 +36,17 @@ public class Negation implements Expression{
     }
 
     @Override
+    public OperationType getType() {
+        return OperationType.LOGIC;
+    }
+
+    @Override
     public String toString() {
         return "!" + negated.toString();
+    }
+
+    @Override
+    public Expression cloneSubstitute(Map<String, String> changeNames) {
+        return new Negation(negated.cloneSubstitute(changeNames));
     }
 }

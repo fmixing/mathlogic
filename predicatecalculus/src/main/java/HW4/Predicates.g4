@@ -1,6 +1,6 @@
 grammar Predicates;
 @header {
-package predicates_parser;
+package HW4;
 import expression.*;
 import expression.Predicate;
 }
@@ -21,20 +21,22 @@ unary returns [Expression value] :      p=predicate {$value = $p.value;}
                                       | EXISTS v2=variable u3=unary {$value = new Exists($v2.value, $u3.value);};
 variable returns [Variable value] : VAR {$value = new Variable($VAR.text);};
 
-predicate returns [Expression value] : PREDVAR {$value = new Predicate($PREDVAR.text);} OB t3=term {((Predicate)$value).addTerm($t3.value);} (COMMA t4=term {((Predicate)$value).addTerm($t4.value);})* CB
-                                     | t1=term EQUALS t2=term {$value = new Equality($t1.value, $t2.value);};
+predicate returns [Expression value] : PREDVAR {$value = new Predicate($PREDVAR.text);}
+   OB t3=term {((Predicate)$value).addTerm($t3.value);} (COMMA t4=term {((Predicate)$value).addTerm($t4.value);})* CB
+                                     | PREDVAR {$value = new Predicate($PREDVAR.text);}
+                                     | t1=term EQUALS t2=term {$value = new Equation($t1.value, $t2.value);};
 
 term returns [Expression value] : a1=adding {$value = $a1.value;} |
-                                  t=term PLUS a2=adding {$value = new Sum($t.value, $a2.value);};
+                                  t=term PLUS a2=adding {$value = new Summation($t.value, $a2.value);};
 
 adding returns [Expression value] : m1=multiplying {$value = $multiplying.value;}
-                                 | a=adding MUL m2=multiplying {$value = new Multiplicity($a.value, $m2.value);};
+                                 | a=adding MUL m2=multiplying {$value = new Multiplication($a.value, $m2.value);};
 
 multiplying returns [Expression value] : VAR OB t1=term {$value = new Function($VAR.text); ((Function)$value).addTerm($t1.value);} (COMMA t2=term {((Function)$value).addTerm($t2.value);})* CB
                                         | v=variable {$value = $v.value;}
                                         | OB t3=term CB {$value = $t3.value;}
                                         | ZERO {$value = new Zero();}
-                                        | m=multiplying NEXT {$value = new Next($m.value);};
+                                        | m=multiplying NEXT {$value = new Successor($m.value);};
 PLUS : '+';
 MUL : '*';
 EQUALS : '=';

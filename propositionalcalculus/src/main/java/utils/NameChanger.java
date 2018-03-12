@@ -23,7 +23,7 @@ public class NameChanger {
                 return new Implication(changeNames(((Implication) expression).getLeft(), newNames),
                         changeNames(((Implication) expression).getRight(), newNames));
             case NEGATION:
-                return new Negation(changeNames(((Negation) expression).getNegated(), newNames));
+                return new Negation(changeNames(((Negation) expression).getExpression(), newNames));
         }
 
         throw new RuntimeException("Something went wrong: expression class " + expression.getClass() +

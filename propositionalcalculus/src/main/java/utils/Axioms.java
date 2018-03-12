@@ -49,7 +49,7 @@ public class Axioms {
                 return check(((Implication) expression).getLeft(), ((Implication) axiom).getLeft())
                         && check(((Implication) expression).getRight(), ((Implication) axiom).getRight());
             case NEGATION:
-                return check(((Negation) expression).getNegated(), ((Negation) axiom).getNegated());
+                return check(((Negation) expression).getExpression(), ((Negation) axiom).getExpression());
             case VARIABLE:
                 return true;
         }

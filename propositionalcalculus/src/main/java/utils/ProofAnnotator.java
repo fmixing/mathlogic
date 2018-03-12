@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class ProofAnnotator {
 
@@ -21,8 +22,14 @@ public class ProofAnnotator {
     public void annotate(Proof proofToAnnotate, String outPath) {
         try (PrintWriter out = new PrintWriter(new File(outPath))) {
             List<Expression> proof = proofToAnnotate.getProof();
-            if (proofToAnnotate.getFirstLine() != null)
-                out.println(proofToAnnotate.getFirstLine());
+            if (proofToAnnotate.getFirstLine() != null) {
+                String newHeader = "|-" + (proofToAnnotate.getAlphaStatement() == null
+                        ? proofToAnnotate.getBetaStatement()
+                        : proofToAnnotate.getAlphaStatement() + "->" + proofToAnnotate.getBetaStatement());
+                StringJoiner sj = new StringJoiner(",", "", newHeader);
+                proofToAnnotate.getAssumptions().forEach(assumption -> sj.add(assumption.toString()));
+                out.println(sj.toString());
+            }
 
             outer:
             for (int currExpr = 0; currExpr < proof.size(); currExpr++) {

@@ -11,8 +11,6 @@ public class Prover {
 
     private Map<String, Integer> namesToIndex = new HashMap<>();
 
-    private List<String> names = new ArrayList<>();
-
     private Map<String, Proof> lemmas;
 
     private Map<BitSet, List<Expression>> bitSetToProof = new HashMap<>();
@@ -50,8 +48,8 @@ public class Prover {
 
             if (expressions.isEmpty()) {
                 System.out.println("Высказывание ложно при ");
-                for (int j = 0; j < bitSet.size(); j++) {
-                    System.out.println(names.get(j) + "=" + (bitSet.get(j) ? "И" : "Л"));
+                for (int j = 0; j < indexToName.size(); j++) {
+                    System.out.println(indexToName.get(j) + "=" + (bitSet.get(j) ? "И" : "Л"));
                 }
                 return Collections.emptyList();
             }
@@ -166,7 +164,7 @@ public class Prover {
     }
 
     private void getNegationProof(List<Expression> collect, BitSet bitSet, Negation expressionToProve, List<Expression> result) {
-        Expression expression = expressionToProve.getNegated();
+        Expression expression = expressionToProve.getExpression();
 
         if (expression.getClassName() == CONJUNCTION) {
             getConjunctionForNegationProof(collect, bitSet, result, (Conjunction) expression);
@@ -181,7 +179,7 @@ public class Prover {
 
     private void getDoubleNegationProof(List<Expression> collect, BitSet bitSet, List<Expression> result, Negation expression) {
         Map<String, Expression> substitutionMap = new HashMap<>();
-        Expression negated = expression.getNegated();
+        Expression negated = expression.getExpression();
 
         substitutionMap.put("a", negated);
 
@@ -329,7 +327,7 @@ public class Prover {
                 return !evaluate(bitSet, ((Implication) expression).getLeft())
                         || evaluate(bitSet, ((Implication) expression).getRight());
             case NEGATION:
-                return !evaluate(bitSet, ((Negation) expression).getNegated());
+                return !evaluate(bitSet, ((Negation) expression).getExpression());
         }
         throw new IllegalStateException("Something went wrong: expression class " + expression.getClass() +
                 " should be equal to one of Conjunction, Disjunction, Implication, Negation or Variable classes");
@@ -342,11 +340,10 @@ public class Prover {
                 String name = ((Variable) expression).getName();
                 if (!varNames.containsKey(name)) {
                     varNames.put(((Variable) expression).getName(), varNames.size());
-                    names.add(name);
                 }
                 break;
             case NEGATION:
-                getVariables(varNames, ((Negation) expression).getNegated());
+                getVariables(varNames, ((Negation) expression).getExpression());
                 break;
             case IMPLICATION:
                 getVariables(varNames, ((Implication) expression).getLeft());
