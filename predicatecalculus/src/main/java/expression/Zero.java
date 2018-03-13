@@ -19,11 +19,6 @@ public class Zero implements Expression {
     public void getFreeVariables(Set<String> boundVariables, Set<String> freeVariables) {}
 
     @Override
-    public OperationType getType() {
-        return OperationType.ARITHMETIC;
-    }
-
-    @Override
     public boolean isomorphicTo(Expression expression, Map<Expression, Expression> checker) {
         return getClassName() == expression.getClassName();
     }

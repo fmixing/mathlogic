@@ -2,20 +2,10 @@ package utils;
 
 import expression.*;
 
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PredicateAxioms {
-
-    public final static String predicateAxiomsPath = "predicatecalculus/src/main/java/predicateaxioms";
-
-    private List<Expression> predicateAxioms;
-
-    public PredicateAxioms(List<Expression> predicateAxioms) {
-        this.predicateAxioms = predicateAxioms;
-    }
 
     public boolean isForAllAxiom(Expression expression) {
         // forall x P(x) -> P(_y_), здесь _y_ является конкретным
@@ -40,7 +30,7 @@ public class PredicateAxioms {
 
         Forall forall = (Forall) maybeForall;
 
-        // todo: сделать адекватную проверку, что выражение слева является общим для выражения справа (с подставленным _y_)
+        // делаем проверку, что выражение слева является общим для выражения справа (с подставленным _y_)
 
         Map<Expression, Expression> check = new HashMap<>();
 
@@ -55,9 +45,6 @@ public class PredicateAxioms {
         if (!check.containsKey(forall.getVariable())) {
             return true;
         }
-
-        // todo: сделать проверку, что _y_ свободен для подстановки вместо x
-        // todo: проверить, что нет других подстановок
 
         // находим переменную, которая была вместо x
         Expression _y_ = check.get(forall.getVariable());
@@ -92,8 +79,6 @@ public class PredicateAxioms {
 
         Exists exists = (Exists) maybeExists;
 
-        // todo: сделать адекватную проверку, что выражение справа является общим для выражения слева (с подставленным _x_)
-
         Map<Expression, Expression> check = new HashMap<>();
 
         Expression exprToCheck = exists.getExpr();
@@ -106,8 +91,6 @@ public class PredicateAxioms {
         if (!check.containsKey(exists.getVariable())) {
             return true;
         }
-
-        // todo: сделать проверку, что _x_ свободен для подстановки вместо y
 
         // находим переменную, которая была вместо y
         Expression _x_ = check.get(exists.getVariable());
@@ -154,7 +137,6 @@ public class PredicateAxioms {
 
         Implication implication = (Implication) maybeImplication;
 
-        // todo:
         // Теперь надо смотреть, что F(x) общее для F(0)
         // (проверять на то, что свободно для подстановки не надо, так как 0 не имеет переменных)
         // Что F(x) общее для F(x')

@@ -15,8 +15,6 @@ public class Task4 {
 
     private static final String deductiontheoremproofs = "propositionalcalculus/src/main/java/deductiontheoremproofs";
 
-    private static final String test = "predicatecalculus/src/test/java/HW4/test.in";
-
     private static final String rulesPath = "predicatecalculus/src/main/java/rules";
 
     private static final String outPath = "predicatecalculus/src/test/java/HW4/annotate.out";
@@ -32,15 +30,13 @@ public class Task4 {
 
         List<Expression> axioms = ExpressionsParser.parse(Axioms.axiomsPath);
 
-        List<Expression> predicateAxioms = PredicateExprParser.predicateParse(PredicateAxioms.predicateAxiomsPath);
-
         List<Expression> arithmeticAxioms = PredicateExprParser.predicateParse(ArithmeticAxioms.arithmeticAxiomsPath);
 
         Map<String, Proof> deductionProofs = new HashMap<>();
 
         try (Stream<Path> paths = Files.walk(Paths.get(deductiontheoremproofs))) {
             paths.filter(Files::isRegularFile).forEach(path -> {
-                Proof p = ExpressionsParser.parseProof(path.toString());
+                Proof p = ExpressionsParser.parseProof(path.toString(), false);
 
                 String fileName = path.getFileName().toString();
 
@@ -72,7 +68,7 @@ public class Task4 {
             throw new RuntimeException(e);
         }
 
-        PredicateAxioms prAx = new PredicateAxioms(predicateAxioms);
+        PredicateAxioms prAx = new PredicateAxioms();
         ArithmeticAxioms arAx = new ArithmeticAxioms(arithmeticAxioms);
         Axioms ax = new Axioms(axioms);
 
@@ -91,7 +87,6 @@ public class Task4 {
         deductionProof.setFirstLine(proof.getFirstLine());
         deductionProof.setBetaStatement(proof.getBetaStatement());
         annotator.annotate(deductionProof, args[1]);
-
     }
 
 }

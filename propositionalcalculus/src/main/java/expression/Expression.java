@@ -10,8 +10,6 @@ public interface Expression {
 
     void getFreeVariables(Set<String> boundVariables,  Set<String> freeVariables);
 
-    OperationType getType();
-
     // Мапа, в которой будут лежать замены переменных этого выражения подвыражениями expression
     boolean isomorphicTo(Expression expression, Map<Expression, Expression> checker);
 

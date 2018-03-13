@@ -2,7 +2,6 @@ package utils;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.Annotated;
 import expression.*;
 import javafx.util.Pair;
 
@@ -33,10 +32,8 @@ public class Annotator {
         this.axioms = axioms;
     }
 
-    public List<Annotated> annotate(Proof proofToAnnotate, String outPath) {
+    public void annotate(Proof proofToAnnotate, String outPath) {
         clear();
-
-        List<Annotated> ans = new ArrayList<>();
 
         List<Expression> proof = proofToAnnotate.getProof();
 
@@ -152,8 +149,6 @@ public class Annotator {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-
-        return ans;
     }
 
     private void clear() {

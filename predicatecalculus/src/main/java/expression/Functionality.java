@@ -16,11 +16,6 @@ public interface Functionality extends Expression {
     }
 
     @Override
-    default OperationType getType() {
-        return OperationType.LOGIC;
-    }
-
-    @Override
     default boolean isomorphicTo(Expression expression, Map<Expression, Expression> checker) {
         if (getClassName() != expression.getClassName()) {
             return false;

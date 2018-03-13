@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class ExpressionsParser {
 
-    public static Proof parseProof(String inPath) {
+    public static Proof parseProof(String inPath, boolean deduct) {
         Proof proof = new Proof();
 
         try (Scanner in = new Scanner(new File(inPath))) {
@@ -26,7 +26,12 @@ public class ExpressionsParser {
                 if (!assumptions.isEmpty()) {
                     proof.setFirstLine(statement);
                     proof.setAssumptions(assumptions);
-                    proof.setAlphaStatement(assumptions.remove(assumptions.size() - 1));
+                    if (deduct) {
+                        proof.setAlphaStatement(assumptions.remove(assumptions.size() - 1));
+                    }
+                    else {
+                        proof.setAlphaStatement(assumptions.get(assumptions.size() - 1));
+                    }
                     proof.setBetaStatement(getBetaStatement(statement));
                 }
 

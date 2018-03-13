@@ -50,11 +50,6 @@ public class Disjunction implements BinOp {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.LOGIC;
-    }
-
-    @Override
     public Expression cloneSubstitute(Map<String, String> changeNames) {
         return new Disjunction(left.cloneSubstitute(changeNames), right.cloneSubstitute(changeNames));
     }

@@ -20,11 +20,6 @@ public interface Quantifier extends Expression {
     }
 
     @Override
-    default OperationType getType() {
-        return OperationType.LOGIC;
-    }
-
-    @Override
     default boolean isomorphicTo(Expression expression, Map<Expression, Expression> checker) {
         return getClassName() == expression.getClassName()
                 && getVariable().equals(((Quantifier) expression).getVariable())

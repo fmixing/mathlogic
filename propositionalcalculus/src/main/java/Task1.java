@@ -19,7 +19,7 @@ public class Task1 {
 
         Axioms axioms = new Axioms(axiomExpressions);
 
-        Proof proof = ExpressionsParser.parseProof(args[0]);
+        Proof proof = ExpressionsParser.parseProof(args[0], false);
 
         ProofAnnotator proofAnnotator = new ProofAnnotator(axioms);
         proofAnnotator.annotate(proof, args[1]);

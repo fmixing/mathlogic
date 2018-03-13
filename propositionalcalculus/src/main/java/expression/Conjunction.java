@@ -31,11 +31,6 @@ public class Conjunction implements BinOp {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.LOGIC;
-    }
-
-    @Override
     public Expression cloneSubstitute(Map<String, String> changeNames) {
         return new Conjunction(left.cloneSubstitute(changeNames), right.cloneSubstitute(changeNames));
     }

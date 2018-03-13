@@ -32,7 +32,7 @@ public class Task3 {
 
         try (Stream<Path> paths = Files.walk(Paths.get(lemmaProofs))) {
             paths.filter(Files::isRegularFile).forEach(path -> {
-                Proof proof = ExpressionsParser.parseProof(path.toString());
+                Proof proof = ExpressionsParser.parseProof(path.toString(), false);
 
                 String fileName = path.getFileName().toString();
 
@@ -47,7 +47,7 @@ public class Task3 {
 
         try (Stream<Path> paths = Files.walk(Paths.get(deductiontheoremproofs))) {
             paths.filter(Files::isRegularFile).forEach(path -> {
-                Proof p = ExpressionsParser.parseProof(path.toString());
+                Proof p = ExpressionsParser.parseProof(path.toString(), false);
 
                 String fileName = path.getFileName().toString();
 

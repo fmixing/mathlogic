@@ -36,11 +36,6 @@ public class Negation implements UnOp {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.LOGIC;
-    }
-
-    @Override
     public String toString() {
         return "!" + negated.toString();
     }

@@ -30,12 +30,6 @@ public class Variable implements Expression {
     }
 
     @Override
-    public OperationType getType() {
-        // todo: определить, чем является переменная
-        return null;
-    }
-
-    @Override
     public boolean isomorphicTo(Expression expression, Map<Expression, Expression> checker) {
         if (checker.containsKey(this)) {
             return checker.get(this).equals(expression);
@@ -51,7 +45,6 @@ public class Variable implements Expression {
             return true;
         }
 
-        // Если на данную переменную уже где-то навешен квантор, todo: то что??
         if (boundVariables.contains(name)) {
             return true;
         }

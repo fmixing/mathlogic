@@ -48,11 +48,6 @@ public class Implication implements BinOp {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.LOGIC;
-    }
-
-    @Override
     public Expression cloneSubstitute(Map<String, String> changeNames) {
         return new Implication(left.cloneSubstitute(changeNames), right.cloneSubstitute(changeNames));
     }

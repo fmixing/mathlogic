@@ -31,13 +31,13 @@ public class Task2 {
 
         Axioms axioms = new Axioms(axiomExpressions);
 
-        Proof proof = ExpressionsParser.parseProof(args[0]);
+        Proof proof = ExpressionsParser.parseProof(args[0], true);
 
         Map<String, Proof> deductionProofs = new HashMap<>();
 
         try (Stream<Path> paths = Files.walk(Paths.get(deductiontheoremproofs))) {
             paths.filter(Files::isRegularFile).forEach(path -> {
-                Proof p = ExpressionsParser.parseProof(path.toString());
+                Proof p = ExpressionsParser.parseProof(path.toString(), false);
 
                 String fileName = path.getFileName().toString();
 

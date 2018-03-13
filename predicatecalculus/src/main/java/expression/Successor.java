@@ -18,11 +18,6 @@ public class Successor implements UnOp {
     }
 
     @Override
-    public OperationType getType() {
-        return OperationType.ARITHMETIC;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
