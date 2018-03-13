@@ -11,6 +11,7 @@
     <modules>
         <module>propositionalcalculus</module>
         <module>predicatecalculus</module>
+        <module>sum</module>
     </modules>
 
     <properties>
